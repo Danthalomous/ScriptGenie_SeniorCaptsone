@@ -3,14 +3,14 @@
     public class OrganizationModel
     {
         // Declaring the model's properties
-        public int OrganizationID { get; private set; }
-        public LinkedList<RosterModel> Rosters { get; private set; }
-        public string VenueName { get; private set; }
-        public string FacilityName { get; private set; }
-        public string OrganizationName { get; private set; }
-        public string TeamName { get; private set; }
-        public string ConferenceRelevance { get; private set; }
-        public string CompetitionLevel { get; private set; }
+        public int OrganizationID { get; set; }
+        public LinkedList<RosterModel> Rosters { get; set; }
+        public string VenueName { get; set; }
+        public string FacilityName { get; set; }
+        public string OrganizationName { get; set; }
+        public string TeamName { get; set; }
+        public string ConferenceRelevance { get; set; }
+        public string CompetitionLevel { get; set; }
         
         /// <summary>
         /// Default constructor that initalizes the class variables to null values

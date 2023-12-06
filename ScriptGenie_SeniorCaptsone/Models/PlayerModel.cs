@@ -3,11 +3,11 @@
     public class PlayerModel
     {
         // Declaration of model's properties
-        public int PlayerID { get; private set; }
-        public string PlayerNamee { get; private set; }
-        public string PlayerPosition { get; private set; }
-        public int PlayerNumber { get; private set; }
-        public bool IsStarting { get; private set; }
+        public int PlayerID { get; set; }
+        public string PlayerNamee { get; set; }
+        public string PlayerPosition { get; set; }
+        public int PlayerNumber { get; set; }
+        public bool IsStarting { get; set; }
 
         /// <summary>
         /// Default constructor that intializes class variables to null

@@ -3,9 +3,9 @@
     public class UserModel
     {
         // Declaration of properties
-        public int UserID { get; private set; }
-        public string Email { get; private set; }
-        public string Password { get; private set; }
+        public int UserID { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
 
         /// <summary>
         /// Default constructor that intializes variables with null values

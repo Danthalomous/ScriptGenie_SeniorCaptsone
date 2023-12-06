@@ -15,8 +15,8 @@ namespace ScriptGenie_SeniorCaptsone.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        [HttpGet("ProcessLogin")]
-        public ActionResult<bool> ProcessLogin(UserModel user)
+        [HttpPost("ProcessLogin")]
+        public ActionResult<bool> ProcessLogin([FromBody] UserModel user)
         {
             return securityService.ProcessLogin(user);
         }

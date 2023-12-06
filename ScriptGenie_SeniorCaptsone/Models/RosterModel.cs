@@ -3,9 +3,9 @@
     public class RosterModel
     {
         // Declaring the model's properties
-        public int RosterID { get; private set; }
+        public int RosterID { get; set; }
         public string CoachName { get; private set; }
-        public LinkedList<PlayerModel> Roster { get; private set; }
+        public LinkedList<PlayerModel> Roster { get; set; }
 
         /// <summary>
         /// Default constructor that initalizes class variables to null
