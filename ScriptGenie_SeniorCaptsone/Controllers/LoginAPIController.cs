@@ -11,7 +11,7 @@ namespace ScriptGenie_SeniorCaptsone.Controllers
         SecurityDAO securityService = new SecurityDAO(); // DAO Service to retrieve data
 
         /// <summary>
-        /// API Get request that returns true or false on whether or not the user has a valid login
+        /// API Post request that returns true or false on whether or not the user has a valid login
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
