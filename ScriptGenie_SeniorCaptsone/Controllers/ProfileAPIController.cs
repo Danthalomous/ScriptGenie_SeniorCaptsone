@@ -6,15 +6,27 @@ namespace ScriptGenie_SeniorCaptsone.Controllers
 {
     [ApiController]
     [Route("profile")]
-    public class ProfileAPIController<T> : ControllerBase
+    public class ProfileAPIController : ControllerBase
     {
-        // TODO: NEEDS WORK
-        private ProfileDAO<T> profileService;
+        private ProfileDAO profileService = new ProfileDAO();
 
-        [HttpPost("Create")]
-        public ActionResult<LinkedList<T>> Create([FromBody] T model, [FromBody] int userID)
+        public class CreateProfileRequest<T>
         {
-            return profileService.Create(userID, model);
+            public T Model { get; set; }
+            public int Id { get; set; }
+        }
+
+        [HttpPost("create/organization")]
+        public IActionResult CreateOrganization([FromBody] CreateProfileRequest<OrganizationModel> request)
+        {
+            if(profileService.CreateOrganization(request.Id, request.Model))
+            {
+                return Ok("Organization Created Successfully");
+            }
+            else
+            {
+                return BadRequest("Invalid Object Submitted");
+            }
         }
     }
 }

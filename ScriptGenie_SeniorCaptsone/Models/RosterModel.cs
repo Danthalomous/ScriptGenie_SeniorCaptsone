@@ -4,7 +4,7 @@
     {
         // Declaring the model's properties
         public int RosterID { get; set; }
-        public string CoachName { get; private set; }
+        public string CoachName { get; set; }
         public LinkedList<PlayerModel> Roster { get; set; }
 
         /// <summary>

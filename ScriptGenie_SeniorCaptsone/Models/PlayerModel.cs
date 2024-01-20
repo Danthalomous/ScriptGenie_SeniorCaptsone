@@ -4,7 +4,7 @@
     {
         // Declaration of model's properties
         public int PlayerID { get; set; }
-        public string PlayerNamee { get; set; }
+        public string PlayerName { get; set; }
         public string PlayerPosition { get; set; }
         public int PlayerNumber { get; set; }
         public bool IsStarting { get; set; }
@@ -15,7 +15,7 @@
         public PlayerModel()
         {
             PlayerID = 0;
-            PlayerNamee = string.Empty;
+            PlayerName = string.Empty;
             PlayerPosition = string.Empty;
             PlayerNumber = 0;
             IsStarting = false;
@@ -32,7 +32,7 @@
         public PlayerModel(int playerID, string playerNamee, string playerPosition, int playerNumber, bool isStarting)
         {
             PlayerID = playerID;
-            PlayerNamee = playerNamee;
+            PlayerName = playerNamee;
             PlayerPosition = playerPosition;
             PlayerNumber = playerNumber;
             IsStarting = isStarting;

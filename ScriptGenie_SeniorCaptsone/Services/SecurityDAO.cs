@@ -52,10 +52,16 @@ namespace ScriptGenie_SeniorCaptsone.Services
         /// <returns></returns>
         public bool ProcessRegister(UserModel user)
         {
-            // Insert statment for SQL
+            // Check if the email is already registered
+            if (IsEmailRegistered(user.Email))
+            {
+                return false; // Email is already registered, registration failed
+            }
+
+            // Insert statement for SQL
             string query = "INSERT INTO users (user_email, user_password) VALUES (@email, @password)";
 
-            using(SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open(); // Opening a connection
 
@@ -75,6 +81,30 @@ namespace ScriptGenie_SeniorCaptsone.Services
         public bool ProcessForgotPassword(UserModel user)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Checks if the email is already registered in the database
+        /// </summary>
+        /// <param name="email">Email to check</param>
+        /// <returns>True if the email is already registered, false otherwise</returns>
+        private bool IsEmailRegistered(string email)
+        {
+            string query = "SELECT COUNT(*) FROM users WHERE user_email = @email";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@email", email);
+
+                    int count = (int)command.ExecuteScalar();
+
+                    return count > 0; // Returns true if the email is already registered
+                }
+            }
         }
     }
 }

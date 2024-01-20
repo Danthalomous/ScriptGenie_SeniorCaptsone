@@ -3,82 +3,65 @@ using ScriptGenie_SeniorCaptsone.Models;
 
 namespace ScriptGenie_SeniorCaptsone.Services
 {
-    public class ProfileDAO<T> : ICRUDDataService<T>
+    public class ProfileDAO
     {
         // Connection string to the database
         string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ScriptGenieUserDatabase;Integrated Security=True;Connect Timeout=30;Encrypt=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
 
-        public LinkedList<T> Create(int userID, T newModel)
+        public bool CreateOrganization(int userID, OrganizationModel organizationModel)
         {
-            // Based on what type of object that was recieved, the appropriate private create function is called
-            if (newModel is OrganizationModel)
+            try
             {
-                if(CreateOrganization(userID, newModel as OrganizationModel))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    return FetchAll(userID);
-                }
-                else
-                {
-                    return null; // TODO: FIX
+                    connection.Open();
+
+                    // Define the SQL query to insert a new organization
+                    string sqlQuery = "INSERT INTO Organizations (users_id, venue_name, facility_name, organization_name, team_name, conference_relevance, competition_level) VALUES (@userId, @venueName, @facilityName, @organizationName, @teamName, @conferenceRelevance, @competitionLevel);";
+
+                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                    {
+                        // Add parameters to the query
+                        command.Parameters.AddWithValue("@userId", userID);
+                        command.Parameters.AddWithValue("@venueName", organizationModel.VenueName);
+                        command.Parameters.AddWithValue("@facilityName", organizationModel.FacilityName);
+                        command.Parameters.AddWithValue("@organizationName", organizationModel.OrganizationName);
+                        command.Parameters.AddWithValue("@teamName", organizationModel.TeamName);
+                        command.Parameters.AddWithValue("@conferenceRelevance", organizationModel.ConferenceRelevance);
+                        command.Parameters.AddWithValue("@competitionLevel", organizationModel.CompetitionLevel);
+
+                        // Execute the query
+                        command.ExecuteNonQuery();
+
+                        // No need to check the number of rows affected for an INSERT operation
+
+                        return true;
+                    }
                 }
             }
-            /*else if (newModel is PlayerModel)
+            catch (Exception ex)
             {
-                //CreatePlayer(userID, newModel);
-                return FetchAll(userID);
-            }
-            else if (newModel is RosterModel)
-            {
-                //CreateRoster(userID, newModel);
-                return FetchAll(userID);
-            }*/
-            else
-            {
-                return null;
-                // TODO: Error handling
+                // Handle exceptions (e.g., log the error)
+                Console.WriteLine($"Error creating organization: {ex.Message}");
+                return false;
             }
         }
 
-        public LinkedList<T> Delete(int userID, int organizationID)
+
+        public LinkedList<OrganizationModel> DeleteOrganization(int userID, int organizationID)
         {
             throw new NotImplementedException();
         }
 
-        public LinkedList<T> FetchAll(int userID)
+        public LinkedList<OrganizationModel> FetchAllOrganizations(int id)
         {
             throw new NotImplementedException();
         }
 
-        public LinkedList<T> Update(int userID, T newModel)
+        public LinkedList<OrganizationModel> Update(int userID, OrganizationModel organizationModel)
         {
             throw new NotImplementedException();
-        }
-
-        private bool CreateOrganization(int userID, OrganizationModel newOrganization)
-        {
-            // Insert statment for SQL
-            string query = "INSERT INTO organizations (users_id, rosters_id, venue_name, facility_name, organization_name, team_name, conference_relevance, competition_level) VALUES (@usersID, SCOPE_IDENTITY(), @venueName, @facilityName, @organizationName, @teamName, @conferenceRelevance, @competitionLevel)";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open(); // Opening a connection
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    // Add the values to the parameters of the query
-                    command.Parameters.AddWithValue("@usersID", userID);
-                    command.Parameters.AddWithValue("@venueName", newOrganization.VenueName);
-                    command.Parameters.AddWithValue("@facilityName", newOrganization.FacilityName);
-                    command.Parameters.AddWithValue("@organizationName", newOrganization.OrganizationName);
-                    command.Parameters.AddWithValue("@teamName", newOrganization.TeamName);
-                    command.Parameters.AddWithValue("@conferenceRelevance", newOrganization.ConferenceRelevance);
-                    command.Parameters.AddWithValue("@competitionLevel", newOrganization.CompetitionLevel);
-
-                    int rowsAffected = command.ExecuteNonQuery();
-
-                    return rowsAffected > 0; // Returns true if there were any rows inserted
-                }
-            }
         }
     }
 }
+
