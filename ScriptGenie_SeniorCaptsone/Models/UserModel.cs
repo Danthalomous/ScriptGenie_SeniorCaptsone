@@ -3,7 +3,7 @@
     public class UserModel
     {
         // Declaration of properties
-        public int UserID { get; set; }
+        public Guid UserID { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
 
@@ -12,7 +12,7 @@
         /// </summary>
         public UserModel()
         {
-            UserID = 0;
+            UserID = Guid.NewGuid();
             Email = string.Empty;
             Password = string.Empty;
         }
@@ -23,7 +23,7 @@
         /// <param name="userID"></param>
         /// <param name="email"></param>
         /// <param name="password"></param>
-        public UserModel(int userID, string email, string password)
+        public UserModel(Guid userID, string email, string password)
         {
             UserID = userID;
             Email = email;

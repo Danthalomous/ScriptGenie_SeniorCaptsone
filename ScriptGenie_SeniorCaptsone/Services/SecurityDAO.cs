@@ -7,7 +7,7 @@ namespace ScriptGenie_SeniorCaptsone.Services
     public class SecurityDAO : ISecurityService
     {
         // Connection string to the database
-        string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ScriptGenieUserDatabase;Integrated Security=True;Connect Timeout=30;Encrypt=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+        string connectionString = "Host=localhost;Port=5432;Database=script_genie;Username=postgres;Password=D@myD()ggy01";
 
         /// <summary>
         /// Checks to see if the provided user is a valid and existing user.

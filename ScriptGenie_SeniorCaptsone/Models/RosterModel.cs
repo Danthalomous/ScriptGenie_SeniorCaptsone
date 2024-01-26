@@ -3,7 +3,7 @@
     public class RosterModel
     {
         // Declaring the model's properties
-        public int RosterID { get; set; }
+        public Guid RosterID { get; set; }
         public string CoachName { get; set; }
         public LinkedList<PlayerModel> Roster { get; set; }
 
@@ -12,7 +12,7 @@
         /// </summary>
         public RosterModel() 
         {
-            RosterID = 0;
+            RosterID = Guid.NewGuid();
             CoachName = string.Empty;
             Roster = new LinkedList<PlayerModel>();
         }
@@ -23,7 +23,7 @@
         /// <param name="rosterID"></param>
         /// <param name="coachName"></param>
         /// <param name="roster"></param>
-        public RosterModel(int rosterID, string coachName, LinkedList<PlayerModel> roster)
+        public RosterModel(Guid rosterID, string coachName, LinkedList<PlayerModel> roster)
         {
             RosterID = rosterID;
             CoachName = coachName;

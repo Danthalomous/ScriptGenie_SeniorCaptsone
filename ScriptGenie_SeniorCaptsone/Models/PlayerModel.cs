@@ -3,7 +3,7 @@
     public class PlayerModel
     {
         // Declaration of model's properties
-        public int PlayerID { get; set; }
+        public Guid PlayerID { get; set; }
         public string PlayerName { get; set; }
         public string PlayerPosition { get; set; }
         public int PlayerNumber { get; set; }
@@ -14,7 +14,7 @@
         /// </summary>
         public PlayerModel()
         {
-            PlayerID = 0;
+            PlayerID = Guid.NewGuid();
             PlayerName = string.Empty;
             PlayerPosition = string.Empty;
             PlayerNumber = 0;
@@ -29,7 +29,7 @@
         /// <param name="playerPosition"></param>
         /// <param name="playerNumber"></param>
         /// <param name="isStarting"></param>
-        public PlayerModel(int playerID, string playerNamee, string playerPosition, int playerNumber, bool isStarting)
+        public PlayerModel(Guid playerID, string playerNamee, string playerPosition, int playerNumber, bool isStarting)
         {
             PlayerID = playerID;
             PlayerName = playerNamee;

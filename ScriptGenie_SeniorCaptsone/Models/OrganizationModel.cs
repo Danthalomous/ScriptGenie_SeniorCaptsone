@@ -3,7 +3,7 @@
     public class OrganizationModel
     {
         // Declaring the model's properties
-        public int OrganizationID { get; set; }
+        public Guid OrganizationID { get; set; }
         public LinkedList<RosterModel> Rosters { get; set; }
         public string VenueName { get; set; }
         public string FacilityName { get; set; }
@@ -17,7 +17,7 @@
         /// </summary>
         public OrganizationModel() 
         {
-            OrganizationID = 0;
+            OrganizationID = Guid.NewGuid();
             Rosters = new LinkedList<RosterModel>();
             VenueName = string.Empty;
             FacilityName = string.Empty;
@@ -38,7 +38,7 @@
         /// <param name="teamName"></param>
         /// <param name="conferenceRelevance"></param>
         /// <param name="competitionLevel"></param>
-        public OrganizationModel(int organizationID, LinkedList<RosterModel> rosters, string venueName, string facilityName, string organizationName, string teamName, string conferenceRelevance, string competitionLevel)
+        public OrganizationModel(Guid organizationID, LinkedList<RosterModel> rosters, string venueName, string facilityName, string organizationName, string teamName, string conferenceRelevance, string competitionLevel)
         {
             OrganizationID = organizationID;
             Rosters = rosters;
