@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Identity.Client;
+using Npgsql;
 using ScriptGenie_SeniorCaptsone.Models;
 
 namespace ScriptGenie_SeniorCaptsone.Services
@@ -19,11 +20,11 @@ namespace ScriptGenie_SeniorCaptsone.Services
             string query = "SELECT * FROM users WHERE user_email = @email AND user_password = @password;";
 
             // Setting up the connection to the database
-            using(SqlConnection connection = new SqlConnection(connectionString))
+            using(NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
 
-                using(SqlCommand command = new SqlCommand(query, connection))
+                using(NpgsqlCommand command = new NpgsqlCommand(query, connection))
                 {
                     // Adding the parameters to the query
                     command.Parameters.AddWithValue("@email", user.Email);
@@ -33,8 +34,7 @@ namespace ScriptGenie_SeniorCaptsone.Services
 
                     if (result != null && result != DBNull.Value) // If the command result was not null
                     {
-                        long count = (long)result;
-                        return count > 0; // will return true if there WERE any rows
+                        return true;
                     }
                     else
                     {
@@ -61,11 +61,11 @@ namespace ScriptGenie_SeniorCaptsone.Services
             // Insert statement for SQL
             string query = "INSERT INTO users (user_email, user_password) VALUES (@email, @password)";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open(); // Opening a connection
 
-                using (SqlCommand command = new SqlCommand(query, connection))
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
                 {
                     // Add the values to the parameters of the query
                     command.Parameters.AddWithValue("@email", user.Email);
@@ -92,11 +92,11 @@ namespace ScriptGenie_SeniorCaptsone.Services
         {
             string query = "SELECT COUNT(*) FROM users WHERE user_email = @email";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
 
-                using (SqlCommand command = new SqlCommand(query, connection))
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@email", email);
 
