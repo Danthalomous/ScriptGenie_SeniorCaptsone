@@ -8,6 +8,11 @@ namespace ScriptGenie_SeniorCaptsone.Services
         // Connection string to the database
         string connectionString = "Host=localhost;Port=5432;Database=script_genie;Username=postgres;Password=D@myD()ggy01";
 
+
+        //--------------------------------------------------------------------------------------------------------------------------------
+        // Organizations
+        //--------------------------------------------------------------------------------------------------------------------------------
+
         /// <summary>
         /// Method that creates a new organization entry into the database
         /// </summary>
@@ -184,6 +189,171 @@ namespace ScriptGenie_SeniorCaptsone.Services
             }
         }
 
+        //--------------------------------------------------------------------------------------------------------------------------------
+        // Rosters
+        //--------------------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// Method that creates a new roster in the database
+        /// </summary>
+        /// <param name="organizationID"></param>
+        /// <param name="rosterModel"></param>
+        /// <returns></returns>
+        public bool CreateRoster(Guid organizationID, RosterModel rosterModel)
+        {
+            try
+            {
+                using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    // Define the SQL query to insert a new organization
+                    string sqlQuery = "INSERT INTO Rosters (rosters_id, organizations_id, players_id, coach_name) VALUES (@rostersID, @organizationsID, @playersID, @coachName);";
+
+                    using (NpgsqlCommand command = new NpgsqlCommand(sqlQuery, connection))
+                    {
+                        // Add parameters to the query
+                        command.Parameters.AddWithValue("@rostersID", Guid.NewGuid());
+                        command.Parameters.AddWithValue("@organizationsID", organizationID);
+                        command.Parameters.AddWithValue("@playersID", rosterModel.PlayerID);
+                        command.Parameters.AddWithValue("@coachName", rosterModel.CoachName);
+
+                        // Execute the query
+                        command.ExecuteNonQuery();
+
+                        return true; // Successful insert
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (e.g., log the error)
+                Console.WriteLine($"Error creating organization: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Method that gets all rosters from the database under a specific organization
+        /// </summary>
+        /// <param name="organizationID"></param>
+        /// <returns></returns>
+        public LinkedList<RosterModel> FetchAllRosters(Guid organizationID)
+        {
+            LinkedList<RosterModel> returnThese = new LinkedList<RosterModel>();
+
+            try
+            {
+                using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    // Define the SQL query to fetch organizations for a specific user_id
+                    string sqlQuery = "SELECT * FROM Rosters WHERE organizations_id = @organizationID;";
+
+                    using (NpgsqlCommand command = new NpgsqlCommand(sqlQuery, connection))
+                    {
+                        // Add parameter to the query
+                        command.Parameters.AddWithValue("@organizationID", organizationID);
+
+                        using (NpgsqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                // Create RosterModel objects and add them to the list
+                                RosterModel roster = new RosterModel
+                                {
+                                    RosterID = reader.GetGuid(reader.GetOrdinal("rosters_id")),
+                                    CoachName = reader.GetString(reader.GetOrdinal("coach_name")),
+                                    PlayerID = reader.GetGuid(reader.GetOrdinal("players_id")),
+                                    Roster = new LinkedList<PlayerModel>()
+                                };
+
+                                returnThese.AddLast(roster);
+                            }
+                        }
+
+                        return returnThese;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (e.g., log the error)
+                Console.WriteLine($"Error fetching rosters: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Method that updates a roster with a new roster based on the rosterID
+        /// </summary>
+        /// <param name="rosterID"></param>
+        /// <param name="rosterModel"></param>
+        /// <returns></returns>
+        public bool UpdateRoster(Guid rosterID, RosterModel rosterModel)
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string sqlQuery = "UPDATE rosters SET coach_name = @coachName WHERE rosters_id = @rostersID";
+
+                using (NpgsqlCommand command = new NpgsqlCommand(sqlQuery, connection))
+                {
+                    // Adding values to the command's parameters
+                    command.Parameters.AddWithValue("@coachName", rosterModel.CoachName);
+                    command.Parameters.AddWithValue("@rostersID", rosterID);
+
+                    try
+                    {
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        // Check if rows were affected
+                        return rowsAffected > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error updating roster: {ex.Message}"); // TODO: Properly handle this
+                        return false;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Method that deletes a roster according to a specific ID
+        /// </summary>
+        /// <param name="rosterID"></param>
+        /// <returns></returns>
+        public bool DeleteRoster(Guid rosterID)
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string sqlQuery = "DELETE FROM rosters WHERE rosters_id = @rostersID";
+
+                using (NpgsqlCommand command = new NpgsqlCommand(sqlQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@rostersID", rosterID);
+
+                    try
+                    {
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        // Check if rows were affected
+                        return rowsAffected > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error deleting roster: {ex.Message}"); // TODO: Properly handle this
+                        return false;
+                    }
+                }
+            }
+
+        }
     }
 }
 

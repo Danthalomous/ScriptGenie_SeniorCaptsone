@@ -5,6 +5,7 @@
         // Declaring the model's properties
         public Guid RosterID { get; set; }
         public string CoachName { get; set; }
+        public Guid PlayerID { get; set; }
         public LinkedList<PlayerModel> Roster { get; set; }
 
         /// <summary>
@@ -14,6 +15,7 @@
         {
             RosterID = Guid.NewGuid();
             CoachName = string.Empty;
+            PlayerID = Guid.NewGuid();
             Roster = new LinkedList<PlayerModel>();
         }
 
@@ -23,11 +25,12 @@
         /// <param name="rosterID"></param>
         /// <param name="coachName"></param>
         /// <param name="roster"></param>
-        public RosterModel(Guid rosterID, string coachName, LinkedList<PlayerModel> roster)
+        public RosterModel(Guid rosterID, string coachName, LinkedList<PlayerModel> roster, Guid playerID)
         {
             RosterID = rosterID;
             CoachName = coachName;
             Roster = roster;
+            PlayerID = playerID;
         }
     }
 }
