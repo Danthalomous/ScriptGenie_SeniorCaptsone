@@ -240,5 +240,115 @@ namespace ScriptGenie_SeniorCaptsone.Controllers
                 return StatusCode(500, "Internal Server Error"); // Something is wrong in the DAO
             }
         }
+
+        /// <summary>
+        /// Method that calls the DAO and attempts to create a roster
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("create/player")]
+        public IActionResult CreatePlayer([FromBody] ProfileRequest<PlayerModel> request)
+        {
+            // Checking if null
+            if (request == null)
+                return BadRequest("Invalid request sent");
+            try
+            {
+                // Check if the organization can be created
+                if (profileService.CreatePlayer(request.Id, request.Model))
+                {
+                    return Ok("Player Created Successfully"); // Success!
+                }
+                else
+                {
+                    return BadRequest("Invalid Object Submitted"); // Failure!
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error"); // Something is wrong in the DAO
+            }
+        }
+
+        /// <summary>
+        /// Method that calls the DAO and attempts to to get all rosters
+        /// </summary>
+        /// <param name="organizationID"></param>
+        /// <returns></returns>
+        [HttpGet("fetchAll/player")]
+        public IActionResult FetchAllPlayers([FromQuery] Guid rosterID)
+        {
+            // Check to see if null (it really can't be but good habits)
+            if (rosterID == null)
+                return BadRequest("Invalid id");
+
+            try
+            {
+                LinkedList<PlayerModel> playersList = profileService.FetchAllPlayers(rosterID); // list to return
+
+                if (playersList.Count > 0)
+                {
+                    // Successful fetch, return the list
+                    return Ok(playersList); // Success!
+                }
+                else
+                {
+                    // No organizations found for the given userID
+                    return NotFound("No players found for the specified roster."); // Failure!
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error"); // Something is wrong in the DAO
+            }
+        }
+
+        /// <summary>
+        /// Method that calls the DAO and attempts to update a specific roster
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPut("update/player")]
+        public IActionResult UpdatePlayers([FromBody] ProfileRequest<PlayerModel> request)
+        {
+            // Check to make sure it's not null
+            if (request == null)
+                return BadRequest("Invalid object submitted");
+
+            try
+            {
+                // Check if the model can be updated
+                if (profileService.UpdatePlayer(request.Id, request.Model)) return Ok("Succesfully updated player!"); // Success!
+                else return BadRequest("Error when updating model"); // Failure!
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error"); // Something in the DAO has a problem
+            }
+        }
+
+        /// <summary>
+        /// Method that calls the DAO and attempts to delete a specific roster
+        /// </summary>
+        /// <param name="rosterID"></param>
+        /// <returns></returns>
+        [HttpDelete("delete/player")]
+        public IActionResult DeletePlayer([FromQuery] Guid playerID)
+        {
+            // Ensure the id is not null (it really can't be but good habits)
+            if (playerID == null)
+                return BadRequest("Invalid body");
+
+            try
+            {
+                // Check if the organization can be deleted
+                if (profileService.DeletePlayer(playerID)) return Ok("Player was succesfully deleted"); // Success!
+                else return BadRequest("Error when trying to delete player"); // Failure!
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error"); // Something is wrong in the DAO
+            }
+        }
     }
 }

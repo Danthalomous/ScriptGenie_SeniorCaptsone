@@ -213,7 +213,7 @@ namespace ScriptGenie_SeniorCaptsone.Services
                     using (NpgsqlCommand command = new NpgsqlCommand(sqlQuery, connection))
                     {
                         // Add parameters to the query
-                        command.Parameters.AddWithValue("@rostersID", Guid.NewGuid());
+                        command.Parameters.AddWithValue("@rostersID", rosterModel.RosterID);
                         command.Parameters.AddWithValue("@organizationsID", organizationID);
                         command.Parameters.AddWithValue("@playersID", rosterModel.PlayerID);
                         command.Parameters.AddWithValue("@coachName", rosterModel.CoachName);
@@ -353,6 +353,177 @@ namespace ScriptGenie_SeniorCaptsone.Services
                 }
             }
 
+        }
+
+        //----------------------------------------------------------------------------------------------------------------------------
+        // Players
+        //----------------------------------------------------------------------------------------------------------------------------
+        
+        /// <summary>
+        /// Method that creates a new player in the database
+        /// </summary>
+        /// <param name="rosterID"></param>
+        /// <param name="playerModel"></param>
+        /// <returns></returns>
+        public bool CreatePlayer(Guid rosterID, PlayerModel playerModel)
+        {
+            try
+            {
+                using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    // Define the SQL query to insert a new organization
+                    string sqlQuery = "INSERT INTO Players (players_id, rosters_id, player_name, player_position, player_number, player_starting) VALUES (@playersID, @rostersID, @playerName, @playerPosition, @playerNumber, @playerStarting);";
+
+                    using (NpgsqlCommand command = new NpgsqlCommand(sqlQuery, connection))
+                    {
+                        // Add parameters to the query
+                        command.Parameters.AddWithValue("@playersID", playerModel.PlayerID);
+                        command.Parameters.AddWithValue("@rostersID", rosterID);
+                        command.Parameters.AddWithValue("@playerName", playerModel.PlayerName);
+                        command.Parameters.AddWithValue("@playerPosition", playerModel.PlayerPosition);
+                        command.Parameters.AddWithValue("@playerNumber", playerModel.PlayerNumber);
+                        command.Parameters.AddWithValue("@playerStarting", playerModel.IsStarting);
+
+                        // Execute the query
+                        command.ExecuteNonQuery();
+
+                        return true; // Successful insert
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (e.g., log the error)
+                Console.WriteLine($"Error creating player: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Method that gets all players from the database under a specific roster
+        /// </summary>
+        /// <param name="rosterID"></param>
+        /// <returns></returns>
+        public LinkedList<PlayerModel> FetchAllPlayers(Guid rosterID)
+        {
+            LinkedList<PlayerModel> returnThese = new LinkedList<PlayerModel>();
+
+            try
+            {
+                using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    // Define the SQL query to fetch organizations for a specific user_id
+                    string sqlQuery = "SELECT * FROM Players WHERE rosters_id = @rosterID;";
+
+                    using (NpgsqlCommand command = new NpgsqlCommand(sqlQuery, connection))
+                    {
+                        // Add parameter to the query
+                        command.Parameters.AddWithValue("@rosterID", rosterID);
+
+                        using (NpgsqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                // Create RosterModel objects and add them to the list
+                                PlayerModel player = new PlayerModel
+                                {
+                                    PlayerID = reader.GetGuid(reader.GetOrdinal("players_id")),
+                                    PlayerName = reader.GetString(reader.GetOrdinal("player_name")),
+                                    PlayerPosition = reader.GetString(reader.GetOrdinal("player_position")),
+                                    PlayerNumber = reader.GetInt32(reader.GetOrdinal("player_number")),
+                                    IsStarting = reader.GetBoolean(reader.GetOrdinal("player_starting"))
+                                };
+
+                                returnThese.AddLast(player);
+                            }
+                        }
+
+                        return returnThese;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (e.g., log the error)
+                Console.WriteLine($"Error fetching players: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Method that updates a player with a new player based on the playerID
+        /// </summary>
+        /// <param name="playerID"></param>
+        /// <param name="playerModel"></param>
+        /// <returns></returns>
+        public bool UpdatePlayer(Guid playerID, PlayerModel playerModel)
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string sqlQuery = "UPDATE players SET player_name = @playerName, player_position = @playerPosition, player_number = @playerNumber, player_starting = @isStarting WHERE players_ID = @playerID";
+
+                using (NpgsqlCommand command = new NpgsqlCommand(sqlQuery, connection))
+                {
+                    // Adding values to the command's parameters
+                    command.Parameters.AddWithValue("@playerName", playerModel.PlayerName);
+                    command.Parameters.AddWithValue("@playerPosition", playerModel.PlayerPosition);
+                    command.Parameters.AddWithValue("@playerNumber", playerModel.PlayerNumber);
+                    command.Parameters.AddWithValue("@isStarting", playerModel.IsStarting);
+                    command.Parameters.AddWithValue("@playerID", playerID);
+
+                    try
+                    {
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        // Check if rows were affected
+                        return rowsAffected > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error updating player: {ex.Message}"); // TODO: Properly handle this
+                        return false;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Method that deletes a player according to a specific ID
+        /// </summary>
+        /// <param name="playerID"></param>
+        /// <returns></returns>
+        public bool DeletePlayer(Guid playerID)
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string sqlQuery = "DELETE FROM players WHERE players_id = @playerID";
+
+                using (NpgsqlCommand command = new NpgsqlCommand(sqlQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@playerID", playerID);
+
+                    try
+                    {
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        // Check if rows were affected
+                        return rowsAffected > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error deleting player: {ex.Message}"); // TODO: Properly handle this
+                        return false;
+                    }
+                }
+            }
         }
     }
 }
