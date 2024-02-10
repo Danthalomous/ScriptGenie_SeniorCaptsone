@@ -5,6 +5,7 @@
         // Declaring the model's properties
         public Guid RosterID { get; set; }
         public string CoachName { get; set; }
+        public string RosterName { get; set; }
         public Guid PlayerID { get; set; }
         public LinkedList<PlayerModel> Roster { get; set; }
 

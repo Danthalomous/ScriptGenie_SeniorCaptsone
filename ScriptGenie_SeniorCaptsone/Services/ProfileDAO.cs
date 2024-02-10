@@ -208,7 +208,7 @@ namespace ScriptGenie_SeniorCaptsone.Services
                     connection.Open();
 
                     // Define the SQL query to insert a new organization
-                    string sqlQuery = "INSERT INTO Rosters (rosters_id, organizations_id, players_id, coach_name) VALUES (@rostersID, @organizationsID, @playersID, @coachName);";
+                    string sqlQuery = "INSERT INTO Rosters (rosters_id, organizations_id, players_id, coach_name, roster_name) VALUES (@rostersID, @organizationsID, @playersID, @coachName, @rosterName);";
 
                     using (NpgsqlCommand command = new NpgsqlCommand(sqlQuery, connection))
                     {
@@ -217,6 +217,7 @@ namespace ScriptGenie_SeniorCaptsone.Services
                         command.Parameters.AddWithValue("@organizationsID", organizationID);
                         command.Parameters.AddWithValue("@playersID", rosterModel.PlayerID);
                         command.Parameters.AddWithValue("@coachName", rosterModel.CoachName);
+                        command.Parameters.AddWithValue("@rostername", rosterModel.RosterName);
 
                         // Execute the query
                         command.ExecuteNonQuery();
@@ -265,6 +266,7 @@ namespace ScriptGenie_SeniorCaptsone.Services
                                 {
                                     RosterID = reader.GetGuid(reader.GetOrdinal("rosters_id")),
                                     CoachName = reader.GetString(reader.GetOrdinal("coach_name")),
+                                    RosterName = reader.GetString(reader.GetOrdinal("roster_name")),
                                     PlayerID = reader.GetGuid(reader.GetOrdinal("players_id")),
                                     Roster = new LinkedList<PlayerModel>()
                                 };
@@ -297,12 +299,13 @@ namespace ScriptGenie_SeniorCaptsone.Services
             {
                 connection.Open();
 
-                string sqlQuery = "UPDATE rosters SET coach_name = @coachName WHERE rosters_id = @rostersID";
+                string sqlQuery = "UPDATE rosters SET coach_name = @coachName, roster_name = @rosterName WHERE rosters_id = @rostersID";
 
                 using (NpgsqlCommand command = new NpgsqlCommand(sqlQuery, connection))
                 {
                     // Adding values to the command's parameters
                     command.Parameters.AddWithValue("@coachName", rosterModel.CoachName);
+                    command.Parameters.AddWithValue("@rosterName", rosterModel.RosterName);
                     command.Parameters.AddWithValue("@rostersID", rosterID);
 
                     try
