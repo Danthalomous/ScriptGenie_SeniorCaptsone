@@ -46,6 +46,41 @@ namespace ScriptGenie_SeniorCaptsone.Services
         }
 
         /// <summary>
+        /// Returns the userID of the desired user
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Guid GetUserID(string email)
+        {
+            string query = "SELECT users_id FROM users WHERE user_email = @email";
+
+            // Setting up the connection to the database
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+                {
+                    // Adding the parameters to the query
+                    command.Parameters.AddWithValue("@email", email);
+
+                    object result = command.ExecuteScalar(); // Executing the command
+
+                    if (result != null && result != DBNull.Value) // If the command result was not null
+                    {
+                        return (Guid)result;
+                    }
+                    else
+                    {
+                        // Handle the case when there are no matching rows
+                        return Guid.Empty;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Inserts the user into the database
         /// </summary>
         /// <param name="user">Model that represents the user trying to register</param>

@@ -70,7 +70,7 @@ namespace ScriptGenie_SeniorCaptsone.Controllers
                 else
                 {
                     // No organizations found for the given userID
-                    return NotFound("No organizations found for the specified user.");
+                    return Ok(null);
                 }
             }
             catch (Exception ex)
@@ -122,7 +122,7 @@ namespace ScriptGenie_SeniorCaptsone.Controllers
             try
             {
                 // Check if the model can be updated
-                if (profileService.UpdateOrganization(request.Id, request.Model)) return Ok("Succesfully updated organization!"); // Success!
+                if (profileService.UpdateOrganization(request.Model.OrganizationID, request.Model)) return Ok("Succesfully updated organization!"); // Success!
                 else return BadRequest("Error when updating model"); // Failure!
             }
             catch (Exception ex)
@@ -184,7 +184,7 @@ namespace ScriptGenie_SeniorCaptsone.Controllers
                 else
                 {
                     // No organizations found for the given userID
-                    return NotFound("No organizations found for the specified user."); // Failure!
+                    return Ok(null); // Failure!
                 }
             }
             catch(Exception ex)
@@ -208,7 +208,7 @@ namespace ScriptGenie_SeniorCaptsone.Controllers
             try
             {
                 // Check if the model can be updated
-                if (profileService.UpdateRoster(request.Id, request.Model)) return Ok("Succesfully updated roster!"); // Success!
+                if (profileService.UpdateRoster(request.Model.RosterID, request.Model)) return Ok("Succesfully updated roster!"); // Success!
                 else return BadRequest("Error when updating model"); // Failure!
             }
             catch (Exception ex)
@@ -294,7 +294,7 @@ namespace ScriptGenie_SeniorCaptsone.Controllers
                 else
                 {
                     // No organizations found for the given userID
-                    return NotFound("No players found for the specified roster."); // Failure!
+                    return Ok(null); // Failure!
                 }
             }
             catch (Exception ex)
@@ -318,7 +318,7 @@ namespace ScriptGenie_SeniorCaptsone.Controllers
             try
             {
                 // Check if the model can be updated
-                if (profileService.UpdatePlayer(request.Id, request.Model)) return Ok("Succesfully updated player!"); // Success!
+                if (profileService.UpdatePlayer(request.Model.PlayerID, request.Model)) return Ok("Succesfully updated player!"); // Success!
                 else return BadRequest("Error when updating model"); // Failure!
             }
             catch (Exception ex)

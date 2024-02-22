@@ -14,6 +14,15 @@ namespace ScriptGenie_SeniorCaptsone.Controllers
     {
         SecurityDAO securityService = new SecurityDAO(); // DAO Service to retrieve data
 
+        [HttpGet("GetUserID")]
+        public ActionResult<Guid> GetUserID(string email)
+        {
+            if(email == null)
+                return BadRequest("Invalid email");
+            
+            return securityService.GetUserID(email);
+        }
+
         /// <summary>
         /// API Post request that returns true or false on whether or not the user has a valid login
         /// </summary>
