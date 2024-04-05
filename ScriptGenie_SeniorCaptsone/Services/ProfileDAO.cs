@@ -88,18 +88,19 @@ namespace ScriptGenie_SeniorCaptsone.Services
                                 // Create OrganizationModel objects and add them to the list
                                 OrganizationModel organization = new OrganizationModel
                                 {
-                                    OrganizationID = reader.GetGuid(reader.GetOrdinal("organizations_id")),
-                                    VenueName = reader.GetString(reader.GetOrdinal("venue_name")),
-                                    FacilityName = reader.GetString(reader.GetOrdinal("facility_name")),
-                                    OrganizationName = reader.GetString(reader.GetOrdinal("organization_name")),
-                                    TeamName = reader.GetString(reader.GetOrdinal("team_name")),
-                                    ConferenceRelevance = reader.GetString(reader.GetOrdinal("conference_relevance")),
-                                    CompetitionLevel = reader.GetString(reader.GetOrdinal("competition_level"))
+                                    OrganizationID = reader.IsDBNull(reader.GetOrdinal("organizations_id")) ? Guid.Empty : reader.GetGuid(reader.GetOrdinal("organizations_id")),
+                                    VenueName = reader.IsDBNull(reader.GetOrdinal("venue_name")) ? null : reader.GetString(reader.GetOrdinal("venue_name")),
+                                    FacilityName = reader.IsDBNull(reader.GetOrdinal("facility_name")) ? null : reader.GetString(reader.GetOrdinal("facility_name")),
+                                    OrganizationName = reader.IsDBNull(reader.GetOrdinal("organization_name")) ? null : reader.GetString(reader.GetOrdinal("organization_name")),
+                                    TeamName = reader.IsDBNull(reader.GetOrdinal("team_name")) ? null : reader.GetString(reader.GetOrdinal("team_name")),
+                                    ConferenceRelevance = reader.IsDBNull(reader.GetOrdinal("conference_relevance")) ? null : reader.GetString(reader.GetOrdinal("conference_relevance")),
+                                    CompetitionLevel = reader.IsDBNull(reader.GetOrdinal("competition_level")) ? null : reader.GetString(reader.GetOrdinal("competition_level"))
                                     // Add other properties as needed
                                 };
 
                                 returnThese.AddLast(organization);
                             }
+
                         }
 
                         return returnThese;

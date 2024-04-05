@@ -334,7 +334,7 @@ namespace ScriptGenie_SeniorCaptsone.Controllers
         /// <returns></returns>
         [HttpDelete("delete/player")]
         public IActionResult DeletePlayer([FromQuery] Guid playerID)
-        {
+         {
             // Ensure the id is not null (it really can't be but good habits)
             if (playerID == null)
                 return BadRequest("Invalid body");

@@ -16,8 +16,8 @@ namespace ScriptGenie_SeniorCaptsone.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        [HttpGet("ProcessForgotPassword")]
-        public ActionResult<bool> ProcessForgotPassword(UserModel user)
+        [HttpPost("ProcessForgotPassword")]
+        public ActionResult<string> ProcessForgotPassword(UserModel user)
         {
             return securityService.ProcessForgotPassword(user);
         }

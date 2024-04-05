@@ -6,6 +6,6 @@ namespace ScriptGenie_SeniorCaptsone.Services
     {
         bool ProcessLogin(UserModel user);
         bool ProcessRegister(UserModel user);
-        bool ProcessForgotPassword(UserModel user);
+        string ProcessForgotPassword(UserModel user);
     }
 }
